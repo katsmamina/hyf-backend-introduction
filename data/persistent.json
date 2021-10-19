@@ -1,5 +1,10 @@
 {
   "users": [],
-  "channels": [],
+  "channels": [
+    {
+      "id": "616bf95f8c56e56119000001",
+      "name": "kkk"
+    }
+  ],
   "messages": []
 }
