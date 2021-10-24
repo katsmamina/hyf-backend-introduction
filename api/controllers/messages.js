@@ -26,11 +26,8 @@ const messageController = {
     // updates the messages with the specified id
     // passed as /api/messages/:messageId
     try {
-      const messageToUpdate = req.params.id;
-      const updatedMessage = await messageManager.updateMessage(
-        messageToUpdate,
-        req.params.body,
-      );
+      const messageToUpdate = req.params.messageId;
+      await messageManager.updateMessage(messageToUpdate, req.params.body);
       res.status(200).send(JSON.stringify(updatedMessage));
     } catch (error) {
       res.status(500).send(error);
@@ -40,10 +37,13 @@ const messageController = {
   post: async (req, res) => {
     // creates a new message based on the passed body
     try {
+      const user = req.body.username;
+      const text = req.body.content;
+      const channel = req.params.channelId;
       const newMessage = await messageManager.createMessage(
-        req.body.user,
-        req.body.text,
-        req.params.channel,
+        user,
+        text,
+        channel,
       );
       res.status(200).send(JSON.stringify(newMessage));
     } catch (error) {

@@ -1,8 +1,13 @@
 'use strict';
 
+const express = require('express');
+const app = express();
 const fs = require('fs');
 const path = require('path');
 const util = require('util');
+const bodyParser = require('body-parser');
+
+app.use(bodyParser.text());
 
 const writeFilePromise = util.promisify(fs.writeFile);
 
