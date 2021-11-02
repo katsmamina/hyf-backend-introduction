@@ -1,3 +1,4 @@
+/* eslint-disable object-shorthand */
 const objectId = require('objectid');
 
 const persistentDataAccess = require('../data-access/persistent');
@@ -23,6 +24,9 @@ const channelManager = {
   },
   removeChannel: async (channelId) => {
     await channelStore.remove(channelId);
+    if (!channelId) {
+      throw new Error(`Could not find channel with id ${channelId}!`);
+    }
     return true;
   },
   getChannel: async (channelId) => {

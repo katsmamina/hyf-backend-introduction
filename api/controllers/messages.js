@@ -1,3 +1,4 @@
+/* eslint-disable prefer-destructuring */
 const messageManager = require('../business-logic/messages').default;
 
 const messageController = {
@@ -27,8 +28,12 @@ const messageController = {
     // passed as /api/messages/:messageId
     try {
       const messageToUpdate = req.params.messageId;
-      await messageManager.updateMessage(messageToUpdate, req.params.body);
-      res.status(200).send(JSON.stringify(updatedMessage));
+      const newData = req.body;
+      if (newData.id !== messageToUpdate) {
+        throw error('cannot change channel ID');
+      }
+      await messageManager.updateMessage(newData);
+      res.status(200).send(JSON.stringify(newData));
     } catch (error) {
       res.status(500).send(error);
     }
@@ -37,19 +42,14 @@ const messageController = {
   post: async (req, res) => {
     // creates a new message based on the passed body
     try {
-      const user = req.body.username;
-      const text = req.body.content;
-      const channel = req.params.channelId;
-      const newMessage = await messageManager.createMessage(
-        user,
-        text,
-        channel,
-      );
-      res.status(200).send(JSON.stringify(newMessage));
+      const user = req.body.user;
+      const text = req.body.text;
+      const channelId = req.params.channelId;
+      const message = await messageManager.createMessage(user, text, channelId);
+      res.status(200).send(JSON.stringify(message));
     } catch (error) {
       res.status(500).send(error);
     }
-    // res.send('Not yet implemented');
   },
   delete: async (req, res) => {
     try {
@@ -57,7 +57,7 @@ const messageController = {
       await messageManager.removeMessage(messageToDelete);
       res.status(200).send(
         JSON.stringify({
-          message: `Message was successfully deleted!`,
+          message: `Message with id ${messageToDelete} was successfully deleted!`,
         }),
       );
     } catch (error) {
